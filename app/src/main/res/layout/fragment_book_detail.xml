@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:padding="16dp">
+
+                <ImageView
+                    android:id="@+id/image_poster"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="16dp" />
+
+                <TextView
+                    android:id="@+id/text_director"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/image_poster"
+                    android:text="by J. R. R. Tolkien" />
+
+                <TextView
+                    android:id="@+id/progress_star"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_director"
+                    android:layout_toRightOf="@+id/image_poster"
+                    android:text="*****" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_director"
+                    android:layout_toRightOf="@+id/progress_star"
+                    android:text="68k ratings" />
+
+                <TextView
+                    android:id="@+id/text_book"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/progress_star"
+                    android:layout_toRightOf="@+id/image_poster"
+                    android:text="Mariner Books (2003)" />
+
+                <TextView
+                    android:id="@+id/text_series"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_book"
+                    android:layout_toRightOf="@+id/image_poster"
+                    android:text="Series: The Lord of" />
+
+                <Button
+                    android:id="@+id/button_favorite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toRightOf="@+id/image_poster"
+                    android:text="Love" />
+            </RelativeLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxHeight="100dp"
+                android:text=""/>
+            </ScrollView>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:text="Give Star"/>
+            </FrameLayout>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>
