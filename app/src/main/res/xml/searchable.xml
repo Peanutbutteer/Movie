@@ -3,4 +3,6 @@
     android:hint="Search"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:voiceSearchMode="showVoiceSearchButton|launchRecognizer"
+    android:searchSuggestAuthority="com.nutstep.movie.SuggestionProvider"
+    android:searchSuggestSelection=" ?"
     />
