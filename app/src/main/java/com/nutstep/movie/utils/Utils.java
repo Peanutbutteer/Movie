@@ -3,6 +3,7 @@ package com.nutstep.movie.utils;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.provider.Settings;
+import android.widget.Toast;
 
 import com.nutstep.movie.manager.Contextor;
 
@@ -39,5 +40,7 @@ public class Utils {
             return "1.0";
         }
     }
+
+
 
 }

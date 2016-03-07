@@ -16,7 +16,7 @@ import com.nutstep.movie.viewholder.TimelineViewHolder;
 public class TimelineViewAdapter extends RecyclerView.Adapter<TimelineViewHolder> {
     @Override
     public TimelineViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View relativeLayout = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_timeline,null);
+        View relativeLayout = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_timeline,parent,false);
         return new TimelineViewHolder(relativeLayout);
     }
 

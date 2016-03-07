@@ -1,36 +1,47 @@
 package com.nutstep.movie.activity;
 
 import android.app.SearchManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.provider.SearchRecentSuggestions;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.speech.RecognizerIntent;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import com.nutstep.movie.ChangeListenner;
 import com.nutstep.movie.R;
-import com.nutstep.movie.SuggestionProvider;
 import com.nutstep.movie.adapter.MainViewPagerAdapter;
-import com.nutstep.movie.adapter.TimelineViewAdapter;
+import com.nutstep.movie.fragment.MainFragment;
+import com.nutstep.movie.fragment.SearchFragment;
+import com.nutstep.movie.fragment.TimelineFragment;
 
-public class MainActivity extends AppCompatActivity {
-    TabLayout tabLayoutMenu;
-    ViewPager viewPagerMain;
-    SearchView searchView;
-    final int HOME = 0;
-    final int MOVIE = 1;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity implements ChangeListenner {
+    MaterialSearchView searchView;
+    RelativeLayout contentContainner;
+    MainFragment mainFragment;
+    TimelineFragment timelineFragment;
+    SearchFragment searchFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,33 +54,17 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        tabLayoutMenu = (TabLayout) findViewById(R.id.tablayout_menu);
-        viewPagerMain = (ViewPager) findViewById(R.id.viewpager_main);
+        contentContainner = (RelativeLayout) findViewById(R.id.content_containner);
 
-        MainViewPagerAdapter pagerAdapter = new MainViewPagerAdapter(getSupportFragmentManager());
-        viewPagerMain.setAdapter(pagerAdapter);
-        tabLayoutMenu.setupWithViewPager(viewPagerMain);
 
-        tabLayoutMenu.setOnTabSelectedListener(onTabSelectedListener);
+        mainFragment = MainFragment.newInstance();
+        timelineFragment = TimelineFragment.newInstance();
+        searchFragment = SearchFragment.newInstance();
+        getSupportFragmentManager().beginTransaction().add(R.id.content_containner, mainFragment).commit();
+
+
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-
-
-        if(Intent.ACTION_SEARCH.equals(intent.getAction()))
-        {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
-                    SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
-            suggestions.saveRecentQuery(query, null);
-            Toast.makeText(MainActivity.this, query, Toast.LENGTH_SHORT).show();
-            searchView.setQuery(query,false);
-            searchView.clearFocus();
-        }
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -77,30 +72,36 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
 
-        // Get the SearchView and set the searchable configuration
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        MenuItem searchItem = menu.findItem(R.id.menu_search);
-        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        ComponentName componentName = new ComponentName(this,SearchActivity.class);
-        // Assumes current activity is the searchable activity
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchView = (MaterialSearchView) findViewById(R.id.search_view);
+        MenuItem item = menu.findItem(R.id.action_search);
+        searchView.setMenuItem(item);
+
+
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+                getSupportFragmentManager().beginTransaction().add(R.id.content_containner, searchFragment ).commit();
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                getSupportFragmentManager().beginTransaction().remove(searchFragment).commit();
+            }
+        });
+
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+                searchFragment.searchToken(query);
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
+                searchFragment.searchToken(newText);
                 return true;
             }
         });
-       // searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-        searchView.setIconified(false);
-        searchView.setQueryRefinementEnabled(true);
-
-
 
         return true;
     }
@@ -109,40 +110,37 @@ public class MainActivity extends AppCompatActivity {
      * Method
      ***********/
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == MaterialSearchView.REQUEST_VOICE && resultCode == RESULT_OK) {
+            ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            if (matches != null && matches.size() > 0) {
+                String searchWrd = matches.get(0);
+                if (!TextUtils.isEmpty(searchWrd)) {
+                    searchView.setQuery(searchWrd, false);
+                }
+            }
 
-    private void changeTitleBar(String title) {
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    public void changeTitleBar(String title) {
         getSupportActionBar().setTitle(title);
     }
 
+    @Override
+    public void setSearchQuery(String query) {
+        searchView.setQuery(query,false);
+    }
 
     /*************
      * Listener
      *************/
 
 
-    TabLayout.OnTabSelectedListener onTabSelectedListener = new TabLayout.OnTabSelectedListener() {
-        @Override
-        public void onTabSelected(TabLayout.Tab tab) {
-            switch (tab.getPosition())
-            {
-                case HOME:
-                    changeTitleBar("HOME");
-                    break;
-                case MOVIE:
-                    changeTitleBar("MOVIE");
-                    break;
-            }
-        }
 
-        @Override
-        public void onTabUnselected(TabLayout.Tab tab) {
-
-        }
-
-        @Override
-        public void onTabReselected(TabLayout.Tab tab) {
-
-        }
-    };
 
 }

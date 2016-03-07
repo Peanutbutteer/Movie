@@ -28,6 +28,12 @@ public class MainViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return position+"";
+        switch (position) {
+            case 0: return "Timeline";
+            case 1: return "Watch";
+            case 2: return "Watchlist";
+            case 3: return "Profile";
+            default: return super.getPageTitle(position);
+        }
     }
 }
