@@ -2,6 +2,7 @@ package com.nutstep.movie.manager;
 
 import android.content.Context;
 
+import com.nutstep.movie.dao.Movie;
 import com.nutstep.movie.dao.MovieList;
 
 import retrofit2.Call;
@@ -30,6 +31,11 @@ public class HttpManager {
     public Call<MovieList>  searchMoive(String title)
     {
        return service.movieSearchList(title);
+    }
+
+    public Call<Movie> getMovieDatail(String id)
+    {
+        return service.movieDatail(id);
     }
 
 }

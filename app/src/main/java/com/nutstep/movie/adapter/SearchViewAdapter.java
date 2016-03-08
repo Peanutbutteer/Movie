@@ -1,6 +1,7 @@
 package com.nutstep.movie.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.nutstep.movie.ChangeListenner;
 import com.nutstep.movie.R;
+import com.nutstep.movie.activity.MovieDetailActivity;
 import com.nutstep.movie.dao.Movie;
 import com.nutstep.movie.viewholder.SearchViewHolder;
 
@@ -20,8 +22,9 @@ public class SearchViewAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 
     private List<Movie> list;
     private ChangeListenner changeListenner;
-
+    private Context context;
     public SearchViewAdapter(Context context) {
+        this.context = context;
         try {
             changeListenner = (ChangeListenner) context;
         } catch (ClassCastException e)
@@ -43,13 +46,21 @@ public class SearchViewAdapter extends RecyclerView.Adapter<SearchViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(SearchViewHolder holder, int position) {
+    public void onBindViewHolder(SearchViewHolder holder, final int position) {
         final Movie movie = list.get(position);
         holder.changeTitleText(movie.getTitle());
         holder.setBtnToQueryListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeListenner.setSearchQuery(movie.getTitle());
+            }
+        });
+        holder.setBtnShowDetailLintener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, MovieDetailActivity.class);
+                intent.putExtra("id",list.get(position).getImdbId());
+                context.startActivity(intent);
             }
         });
     }

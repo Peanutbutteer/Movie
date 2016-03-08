@@ -3,6 +3,7 @@ package com.nutstep.movie.viewholder;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nutstep.movie.R;
@@ -13,9 +14,11 @@ import com.nutstep.movie.R;
 public class SearchViewHolder extends RecyclerView.ViewHolder {
     TextView textTitle;
     ImageView btnToQuery;
+    LinearLayout btnShowDetail;
     public SearchViewHolder(View itemView) {
         super(itemView);
         textTitle = (TextView) itemView.findViewById(R.id.text_title);
+        btnShowDetail = (LinearLayout) itemView.findViewById(R.id.btn_show_detail);
         btnToQuery = (ImageView) itemView.findViewById(R.id.btn_toquery);
     }
 
@@ -28,5 +31,10 @@ public class SearchViewHolder extends RecyclerView.ViewHolder {
     {
         btnToQuery.setClickable(true);
         btnToQuery.setOnClickListener(listener);
+    }
+
+    public void setBtnShowDetailLintener(View.OnClickListener listener)
+    {
+        btnShowDetail.setOnClickListener(listener);
     }
 }

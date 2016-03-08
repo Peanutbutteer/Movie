@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.PersistableBundle;
 import android.speech.RecognizerIntent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
@@ -39,30 +40,25 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements ChangeListenner {
     MaterialSearchView searchView;
     RelativeLayout contentContainner;
-    MainFragment mainFragment;
-    TimelineFragment timelineFragment;
     SearchFragment searchFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         initInstance();
+
+        if(savedInstanceState==null)
+        {
+            getSupportFragmentManager().beginTransaction().add(R.id.content_containner, MainFragment.newInstance()).commit();
+        }
     }
-    private void initInstance()
-    {
+
+    private void initInstance() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        contentContainner = (RelativeLayout) findViewById(R.id.content_containner);
-
-
-        mainFragment = MainFragment.newInstance();
-        timelineFragment = TimelineFragment.newInstance();
         searchFragment = SearchFragment.newInstance();
-        getSupportFragmentManager().beginTransaction().add(R.id.content_containner, mainFragment).commit();
-
-
     }
 
 
@@ -76,19 +72,17 @@ public class MainActivity extends AppCompatActivity implements ChangeListenner {
         MenuItem item = menu.findItem(R.id.action_search);
         searchView.setMenuItem(item);
 
-
         searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
             public void onSearchViewShown() {
-                getSupportFragmentManager().beginTransaction().add(R.id.content_containner, searchFragment ).commit();
+                getSupportFragmentManager().beginTransaction().add(R.id.content_containner, searchFragment, "SearchFragment").addToBackStack(null).commit();
             }
 
             @Override
             public void onSearchViewClosed() {
-                getSupportFragmentManager().beginTransaction().remove(searchFragment).commit();
+                getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag("SearchFragment")).commit();
             }
         });
-
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -104,6 +98,14 @@ public class MainActivity extends AppCompatActivity implements ChangeListenner {
         });
 
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (searchView.isSearchOpen()) {
+            searchView.closeSearch();
+        }
     }
 
     /***********
@@ -133,14 +135,12 @@ public class MainActivity extends AppCompatActivity implements ChangeListenner {
 
     @Override
     public void setSearchQuery(String query) {
-        searchView.setQuery(query,false);
+        searchView.setQuery(query, false);
     }
 
     /*************
      * Listener
      *************/
-
-
 
 
 }
