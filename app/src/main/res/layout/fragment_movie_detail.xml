@@ -1,57 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <RelativeLayout
-        android:padding="16dp"
+    android:layout_height="match_parent">
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scrollview_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ImageView
-            android:layout_marginRight="16dp"
-            android:id="@+id/image_poster"
-            android:background="@color/cardview_dark_background"
-            android:layout_width="80dp"
-            android:layout_height="110dp"/>
-        <TextView
-            android:textSize="16sp"
-            android:layout_alignTop="@id/image_poster"
-            android:text="Iron Man 3"
-            android:id="@+id/text_title"
-            android:layout_toRightOf="@id/image_poster"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:text="7.9 (658,373)"
-            android:layout_toRightOf="@id/image_poster"
-            android:layout_below="@+id/text_runtime"
-            android:id="@+id/text_score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:text="126 min"
-            android:layout_toRightOf="@id/image_poster"
-            android:layout_below="@id/text_title"
-            android:id="@+id/text_runtime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:text="After being held captive in an Afghan cave, an engineer creates a unique weaponized suit of armor to fight evil."
-            android:id="@+id/text_plot"
-            android:layout_below="@id/text_score"
-            android:layout_alignLeft="@id/text_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
 
-        <Button
-            android:layout_alignLeft="@id/text_title"
-            android:layout_below="@id/text_plot"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/image_poster"
+                android:layout_width="80dp"
+                android:layout_height="110dp"
+                android:layout_marginRight="16dp"
+                android:background="@color/cardview_dark_background" />
+
+            <TextView
+                android:id="@+id/text_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/image_poster"
+                android:layout_toRightOf="@id/image_poster"
+                android:text="Iron Man 3"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/text_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_runtime"
+                android:layout_toRightOf="@id/image_poster"
+                android:text="7.9 (658,373)" />
+
+            <TextView
+                android:id="@+id/text_runtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_title"
+                android:layout_toRightOf="@id/image_poster"
+                android:text="126 min" />
+
+            <TextView
+                android:id="@+id/text_plot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/text_title"
+                android:layout_below="@id/text_score"
+                android:text="After being held captive in an Afghan cave, an engineer creates a unique weaponized suit of armor to fight evil." />
+
+            <ImageView
+                android:src="@drawable/btn_list_state"
+                android:id="@+id/btn_add_to_watch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/text_title"
+                android:layout_below="@id/text_plot" />
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/multiple_actions_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fab_addButtonColorNormal="@color/white"
+        app:fab_addButtonColorPressed="@color/white_pressed"
+        app:fab_addButtonPlusIconColor="@color/half_black"
+        app:fab_addButtonStrokeVisible="false"
+        app:fab_expandDirection="up"
+        app:layout_anchor="@id/scrollview_content"
+        app:layout_anchorGravity="bottom|right|end">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <Button
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="@color/white_pressed"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </RelativeLayout>
-</android.support.v4.widget.NestedScrollView>
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="@color/white_pressed"
+            app:fab_size="mini"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="@color/white_pressed"
+            app:fab_size="mini"/>
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+</android.support.design.widget.CoordinatorLayout>

@@ -50,4 +50,10 @@ public class MovieDetailActivity extends AppCompatActivity implements ChangeList
     public void setSearchQuery(String query) {
 
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

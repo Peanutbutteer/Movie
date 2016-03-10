@@ -80,7 +80,9 @@ public class MainActivity extends AppCompatActivity implements ChangeListenner {
 
             @Override
             public void onSearchViewClosed() {
-                getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag("SearchFragment")).commit();
+                if(getSupportFragmentManager().findFragmentByTag("SearchFragment")!=null) {
+                    getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag("SearchFragment")).commit();
+                }
             }
         });
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {

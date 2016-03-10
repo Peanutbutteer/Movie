@@ -2,6 +2,7 @@ package com.nutstep.movie;
 
 import android.app.Application;
 
+import com.firebase.client.Firebase;
 import com.nutstep.movie.manager.Contextor;
 
 /**
@@ -11,7 +12,8 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-//        Contextor.getInstance().init(getApplicationContext());
+        Firebase.setAndroidContext(this);
+        Contextor.getInstance().init(getApplicationContext());
     }
 
     @Override

@@ -119,7 +119,9 @@ public class SearchFragment extends Fragment {
 
     public void showToast(String toast)
     {
-        Toast.makeText(getContext(),toast,Toast.LENGTH_SHORT).show();
+        if(getActivity()!=null) {
+            Toast.makeText(getActivity(), toast, Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

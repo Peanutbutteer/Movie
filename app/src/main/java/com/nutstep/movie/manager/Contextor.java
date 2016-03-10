@@ -22,8 +22,7 @@ public class Contextor {
         return mContext;
     }
 
-    private void init(Context mContext)
-    {
+    public void init(Context mContext) {
         this.mContext = mContext;
     }
 }

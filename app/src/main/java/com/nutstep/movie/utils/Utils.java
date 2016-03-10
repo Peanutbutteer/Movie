@@ -41,6 +41,11 @@ public class Utils {
         }
     }
 
+    public String getBaseUrl()
+    {
+        return "https://blistering-fire-71.firebaseio.com";
+    }
+
 
 
 }

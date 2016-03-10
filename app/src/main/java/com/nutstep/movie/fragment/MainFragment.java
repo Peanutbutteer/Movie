@@ -24,6 +24,8 @@ public class MainFragment extends Fragment {
     final int HOME = 0;
     final int MOVIE = 1;
     ChangeListenner mChangeTitle;
+    MainViewPagerAdapter pagerAdapter;
+    TabLayout tabLayoutMenu;
     public MainFragment() {
         super();
     }
@@ -76,15 +78,15 @@ public class MainFragment extends Fragment {
         // Note: State of variable initialized here could not be saved
         //       in onSavedInstanceState
 
-        TabLayout tabLayoutMenu = (TabLayout) rootView.findViewById(R.id.tablayout_menu);
+        tabLayoutMenu = (TabLayout) rootView.findViewById(R.id.tablayout_menu);
         viewPagerMain = (ViewPager) rootView.findViewById(R.id.viewpager_main);
 
 
-        MainViewPagerAdapter pagerAdapter = new MainViewPagerAdapter(getFragmentManager());
+        pagerAdapter = new MainViewPagerAdapter(getFragmentManager());
         viewPagerMain.setAdapter(pagerAdapter);
         tabLayoutMenu.setupWithViewPager(viewPagerMain);
 
-        tabLayoutMenu.setOnTabSelectedListener(onTabSelectedListener);
+       // tabLayoutMenu.setOnTabSelectedListener(onTabSelectedListener);
 
 
 
@@ -112,7 +114,8 @@ public class MainFragment extends Fragment {
     TabLayout.OnTabSelectedListener onTabSelectedListener = new TabLayout.OnTabSelectedListener() {
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
-                   mChangeTitle.changeTitleBar(tab.getText().toString());
+            viewPagerMain.setCurrentItem(tab.getPosition(),true);
+                  mChangeTitle.changeTitleBar(tab.getText().toString());
         }
 
         @Override
