@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
 import com.nutstep.movie.R;
 import com.nutstep.movie.adapter.MovieGridsAdapter;
 import com.nutstep.movie.dao.Intheater;
@@ -24,10 +23,11 @@ import retrofit2.Response;
 
 
 public class MovieListFragment extends Fragment {
-    Firebase ref = new Firebase(Utils.getInstance().getBaseUrl());
-    String uid = LocalStoreageManager.getInstance().getUid();
     MovieGridsAdapter viewAdapter;
     RecyclerView recyclerViewMovie;
+
+    final public static int MODE_IN_THEATER = 1;
+    final public static int MODE_COMING = 2;
 
     public MovieListFragment() {
         super();
@@ -68,31 +68,22 @@ public class MovieListFragment extends Fragment {
         // Note: State of variable initialized here could not be saved
         //       in onSavedInstanceState
 
+
+        if(getArguments().getInt("mode",0)==MODE_COMING)
+        {
+            loadUpComing();
+        }
+        else
+        {
+            loadInTheater();
+        }
+
         viewAdapter = new MovieGridsAdapter(getContext());
         recyclerViewMovie = (RecyclerView) rootView.findViewById(R.id.recylerview_movie_list);
         recyclerViewMovie.setAdapter(viewAdapter);
         recyclerViewMovie.setLayoutManager(new GridLayoutManager(getContext(),3));
 
 
-        HttpManager.getInstance().getMovieIntheater().enqueue(new Callback<Intheater>() {
-            @Override
-            public void onResponse(Call<Intheater> call, Response<Intheater> response) {
-                if(response.isSuccess())
-                {
-                    viewAdapter.setMovies(response.body().getResults());
-                    viewAdapter.notifyDataSetChanged();
-                }
-                else
-                {
-                    Toast.makeText(getContext(),"Error",Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Intheater> call, Throwable t) {
-                Toast.makeText(getContext(),t.getMessage(),Toast.LENGTH_LONG).show();
-            }
-        });
 
 
         if (savedInstanceState == null) {
@@ -100,6 +91,16 @@ public class MovieListFragment extends Fragment {
 
 
     }
+
+    private void loadInTheater() {
+
+        HttpManager.getInstance().getMovieIntheater().enqueue(callback);
+    }
+
+    private void loadUpComing(){
+        HttpManager.getInstance().getMovieComing().enqueue(callback);
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -110,5 +111,22 @@ public class MovieListFragment extends Fragment {
     private void onRestoreInstanceState(Bundle savedInstanceState) {
         // Restore Instance (Fragment level's variables) State here
     }
+
+    Callback<Intheater> callback = new Callback<Intheater>() {
+        @Override
+        public void onResponse(Call<Intheater> call, Response<Intheater> response) {
+            if (response.isSuccess()) {
+                viewAdapter.setMovies(response.body().getResults());
+                viewAdapter.notifyDataSetChanged();
+            } else {
+                Toast.makeText(getContext(), "Error", Toast.LENGTH_LONG).show();
+            }
+        }
+
+        @Override
+        public void onFailure(Call<Intheater> call, Throwable t) {
+            Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    };
 
 }

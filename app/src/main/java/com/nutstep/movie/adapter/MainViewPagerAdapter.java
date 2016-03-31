@@ -1,5 +1,6 @@
 package com.nutstep.movie.adapter;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -18,12 +19,17 @@ public class MainViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        Bundle bundle = new Bundle();
         if (position == 0) {
+            bundle.putInt("mode",MovieListFragment.MODE_IN_THEATER);
             MovieListFragment movieListFragment = MovieListFragment.newInstance();
+            movieListFragment.setArguments(bundle);
             return movieListFragment;
         }
         if (position == 1) {
+            bundle.putInt("mode",MovieListFragment.MODE_COMING);
             MovieListFragment movieListFragment = MovieListFragment.newInstance();
+            movieListFragment.setArguments(bundle);
             return movieListFragment;
         }
         return MovieListFragment.newInstance();

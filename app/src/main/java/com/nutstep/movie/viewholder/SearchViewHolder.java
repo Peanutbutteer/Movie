@@ -17,11 +17,11 @@ import com.nutstep.movie.R;
  */
 public class SearchViewHolder extends RecyclerView.ViewHolder {
     TextView textTitle,textYear,textGenre;
-    RelativeLayout itemContainner;
+    LinearLayout itemContainner;
     ImageView imagePoster;
     public SearchViewHolder(View itemView) {
         super(itemView);
-        itemContainner = (RelativeLayout) itemView.findViewById(R.id.item_containner);
+        itemContainner = (LinearLayout) itemView.findViewById(R.id.item_containner);
         textTitle = (TextView) itemView.findViewById(R.id.text_title);
         textYear = (TextView) itemView.findViewById(R.id.text_year);
         textGenre = (TextView) itemView.findViewById(R.id.text_genre);
@@ -39,12 +39,12 @@ public class SearchViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void changeGenreText(String text){
-        textGenre.setText(text);
+//        textGenre.setText(text);
     }
 
     public void setImagePoster(Context context, String url)
     {
-        Glide.with(context).load("https://image.tmdb.org/t/p/w1000/"+url).centerCrop().into(imagePoster);
+   //     Glide.with(context).load("https://image.tmdb.org/t/p/w1000/"+url).centerCrop().into(imagePoster);
     }
 
     public void setBtnShowDetailLintener(View.OnClickListener listener)

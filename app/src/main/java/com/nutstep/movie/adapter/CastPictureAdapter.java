@@ -7,13 +7,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.nutstep.movie.R;
+import com.nutstep.movie.dao.Cast;
 import com.nutstep.movie.viewholder.CastPictureViewHolder;
+
+import java.util.List;
 
 /**
  * Created by peanutbutteer on 3/24/2016 AD.
  */
 public class CastPictureAdapter extends RecyclerView.Adapter<CastPictureViewHolder> {
     private Context mContext;
+    private List<Cast> castList;
     public CastPictureAdapter(Context context) {
         mContext = context;
     }
@@ -24,14 +28,19 @@ public class CastPictureAdapter extends RecyclerView.Adapter<CastPictureViewHold
         return new CastPictureViewHolder(view);
     }
 
+    public void setCastList(List<Cast> list)
+    {
+        this.castList = list;
+    }
+
     @Override
     public void onBindViewHolder(CastPictureViewHolder holder, int position) {
-        holder.setImageCast(mContext,"https://image.tmdb.org/t/p/w396/sntIBTOYJMKDN8rwYPtBnVMh8ld.jpg");
-        holder.setTextCast("Leonardo DiCaprio");
+        holder.setImageCast(mContext,"https://image.tmdb.org/t/p/w396"+castList.get(position).getProfilePath());
+        holder.setTextCast(castList.get(position).getName());
     }
 
     @Override
     public int getItemCount() {
-        return 10;
+        return (castList==null||castList.size()<=0)?0:castList.size();
     }
 }

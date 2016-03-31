@@ -7,6 +7,10 @@
         android:id="@+id/image_cast"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80565656"/>
     <TextView
         android:textColor="#FFFFFF"
         android:gravity="center"

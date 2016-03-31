@@ -1,13 +1,11 @@
 package com.nutstep.movie.dao;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;
 
 /**
  * Created by peanutbutteer on 3/9/2016 AD.
  */
-@JsonIgnoreProperties(ignoreUnknown=true)
 public class User {
     String fullName;
     String location;

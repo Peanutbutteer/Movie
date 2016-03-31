@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,15 +21,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.nutstep.movie.ChangeListenner;
 import com.nutstep.movie.R;
 import com.nutstep.movie.activity.MovieDetailActivity;
 import com.nutstep.movie.adapter.CastPictureAdapter;
 import com.nutstep.movie.adapter.PhotoMovieAdapter;
+import com.nutstep.movie.dao.Casts;
+import com.nutstep.movie.dao.Genre;
 import com.nutstep.movie.dao.Movie;
 import com.nutstep.movie.dao.Photos;
 import com.nutstep.movie.dao.Result;
@@ -51,14 +50,11 @@ import retrofit2.Response;
 
 public class MovieDetailFragment extends Fragment {
     int imdbId;
-    TextView textTitle, textScore, textRuntime, textPlot;
-    ImageView imageStatus;
-    Firebase ref = new Firebase(Utils.getInstance().getBaseUrl());
+    TextView textScore, textPlot;
     Movie movie;
     RecyclerView recyclerViewMoivePicture, recyclerViewMoiveCast;
     PhotoMovieAdapter photoMovieAdapter;
     CastPictureAdapter castPictureAdapter;
-    String uid = LocalStoreageManager.getInstance().getSharedPreferences().getString("uid", "");
 
     public MovieDetailFragment() {
         super();
@@ -68,6 +64,7 @@ public class MovieDetailFragment extends Fragment {
     DetailFragment mDetailFragment;
     public interface DetailFragment{
         public void setImagePoster(String path);
+        public void setGenre(String genre);
     }
 
     public static MovieDetailFragment newInstance() {
@@ -75,12 +72,6 @@ public class MovieDetailFragment extends Fragment {
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.options_menu, menu);
     }
 
     @Override
@@ -126,7 +117,6 @@ public class MovieDetailFragment extends Fragment {
         // Note: State of variable initialized here could not be saved
         //       in onSavedInstanceState
         imdbId = getArguments().getInt("id", 0);
-        textTitle = (TextView) rootView.findViewById(R.id.text_title);
         textScore = (TextView) rootView.findViewById(R.id.text_score);
         textPlot = (TextView) rootView.findViewById(R.id.text_plot);
         recyclerViewMoivePicture = (RecyclerView) rootView.findViewById(R.id.recylerview_movie_picture);
@@ -165,6 +155,8 @@ public class MovieDetailFragment extends Fragment {
                     mDetailFragment.setImagePoster(movie.getBackdropPath());
                     textScore.setText(String.valueOf(movie.getVoteAverage()));
                     textPlot.setText(movie.getOverview());
+                    String textGenre = getGenreString();
+                    mDetailFragment.setGenre(textGenre);
                     removeLoadingScreen();
                 }
                 else
@@ -175,6 +167,17 @@ public class MovieDetailFragment extends Fragment {
                         e.printStackTrace();
                     }
                 }
+            }
+
+            @NonNull
+            private String getGenreString() {
+                String textGenre = "";
+                for(Genre genre : movie.getGenres())
+                {
+                    textGenre += genre.getName()+",";
+                }
+                textGenre = textGenre.substring(0,textGenre.length()-1);
+                return textGenre;
             }
 
             @Override
@@ -195,6 +198,21 @@ public class MovieDetailFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Photos> call, Throwable t) {
+
+            }
+        });
+
+        HttpManager.getInstance().getCast(id).enqueue(new Callback<Casts>() {
+            @Override
+            public void onResponse(Call<Casts> call, Response<Casts> response) {
+                if(response.isSuccess()&&response.body().getCast()!=null) {
+                    castPictureAdapter.setCastList(response.body().getCast());
+                    castPictureAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Casts> call, Throwable t) {
 
             }
         });

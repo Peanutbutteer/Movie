@@ -12,9 +12,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.client.AuthData;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 import com.nutstep.movie.R;
 import com.nutstep.movie.activity.MainActivity;
 import com.nutstep.movie.manager.LocalStoreageManager;
@@ -22,7 +19,6 @@ import com.nutstep.movie.utils.Utils;
 
 
 public class LoginFragment extends Fragment {
-    Firebase ref = new Firebase(Utils.getInstance().getBaseUrl());
     EditText editTextEmail,editTextPassword;
     Button btnLogin;
     TextView textSignUp;
@@ -93,24 +89,24 @@ public class LoginFragment extends Fragment {
                 String passwordText = editTextPassword.getText().toString();
                 final String emailText = editTextEmail.getText().toString();
 
-                ref.authWithPassword(emailText, passwordText, new Firebase.AuthResultHandler() {
-                    @Override
-                    public void onAuthenticated(AuthData authData) {
-                        Log.d("Login","User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
-                        Intent intent = new Intent(getContext(),MainActivity.class);
-                        LocalStoreageManager.getInstance().getEditor().putString("uid",authData.getUid()).putString("email",emailText).apply();
-                        startActivity(intent);
-                        if(getActivity()!=null)
-                        {
-                            getActivity().finish();
-                        }
-                    }
-
-                    @Override
-                    public void onAuthenticationError(FirebaseError firebaseError) {
-                        Toast.makeText(getContext(),firebaseError.getMessage(),Toast.LENGTH_SHORT).show();
-                    }
-                });
+//                ref.authWithPassword(emailText, passwordText, new Firebase.AuthResultHandler() {
+//                    @Override
+//                    public void onAuthenticated(AuthData authData) {
+//                        Log.d("Login","User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
+//                        Intent intent = new Intent(getContext(),MainActivity.class);
+//                        LocalStoreageManager.getInstance().getEditor().putString("uid",authData.getUid()).putString("email",emailText).apply();
+//                        startActivity(intent);
+//                        if(getActivity()!=null)
+//                        {
+//                            getActivity().finish();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onAuthenticationError(FirebaseError firebaseError) {
+//                        Toast.makeText(getContext(),firebaseError.getMessage(),Toast.LENGTH_SHORT).show();
+//                    }
+//                });
             }
             if(v==textSignUp)
             {

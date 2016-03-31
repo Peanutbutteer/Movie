@@ -13,7 +13,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.MainActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,9 +25,13 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity android:name=".activity.LoginActivity"></activity>
-        <activity android:name=".activity.MovieDetailActivity"
-            android:parentActivityName=".activity.MainActivity"/>
-        <activity android:name=".activity.RandomActivity" android:parentActivityName=".activity.MainActivity">
+        <activity
+            android:name=".activity.MovieDetailActivity"
+            android:parentActivityName=".activity.MainActivity" />
+        <activity
+            android:name=".activity.RandomActivity"
+            android:parentActivityName=".activity.MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />

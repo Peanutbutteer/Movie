@@ -113,31 +113,28 @@ public class MainActivity extends AppCompatActivity implements ChangeListenner {
             @Override
             public void onSearchViewShown() {
                 getSupportFragmentManager().beginTransaction().add(R.id.content_containner, searchFragment, "SearchFragment").addToBackStack(null).commit();
-                ((AppBarLayout.LayoutParams)frameLayout.getLayoutParams()).setScrollFlags(0);
-               // bottomBar.setVisibility(View.GONE);
-
             }
 
             @Override
             public void onSearchViewClosed() {
                 if(getSupportFragmentManager().findFragmentByTag("SearchFragment")!=null) {
                     getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag("SearchFragment")).commit();
-                    ((AppBarLayout.LayoutParams)frameLayout.getLayoutParams()).setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS| AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
-                  //  bottomBar.setVisibility(View.VISIBLE);
-                }
+                   }
             }
         });
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchFragment.searchToken(query);
-                hideKeyboard();
+                if(!query.isEmpty()) {
+                    searchFragment.searchToken(query);
+                    hideKeyboard();
+                }
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                searchFragment.searchToken(newText);
+                if(!newText.isEmpty())searchFragment.searchToken(newText);
                 return true;
             }
         });

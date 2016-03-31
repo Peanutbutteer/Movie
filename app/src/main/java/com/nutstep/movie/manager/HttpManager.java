@@ -2,6 +2,7 @@ package com.nutstep.movie.manager;
 
 import android.content.Context;
 
+import com.nutstep.movie.dao.Casts;
 import com.nutstep.movie.dao.Intheater;
 import com.nutstep.movie.dao.Movie;
 import com.nutstep.movie.dao.MovieList;
@@ -47,8 +48,16 @@ public class HttpManager {
         return service.moviePhoto(id);
     }
 
+    public Call<Intheater> getMovieComing() {
+        return service.upComing();
+    }
+
     public Call<Intheater> getMovieIntheater() {
         return service.inTheater();
+    }
+
+    public Call<Casts> getCast(String id){
+        return service.getCastDetail(id);
     }
 
 }

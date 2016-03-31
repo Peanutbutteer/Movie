@@ -1,5 +1,6 @@
 package com.nutstep.movie.manager;
 
+import com.nutstep.movie.dao.Casts;
 import com.nutstep.movie.dao.Intheater;
 import com.nutstep.movie.dao.Movie;
 import com.nutstep.movie.dao.MovieList;
@@ -22,8 +23,12 @@ public interface MovieService {
     Call<Movie> movieDatail(@Path("id") String id);
     @GET("movie/now_playing?api_key=eff7e3120107959ee18d20eeaf5ea5fd")
     Call<Intheater> inTheater();
+    @GET("movie/upcoming?api_key=eff7e3120107959ee18d20eeaf5ea5fd")
+    Call<Intheater> upComing();
     @GET("search/movie?api_key=eff7e3120107959ee18d20eeaf5ea5fd")
     Call<SearchMovie> searchMovie(@Query("query") String query);
     @GET("movie/{id}/images?api_key=eff7e3120107959ee18d20eeaf5ea5fd")
     Call<Photos> moviePhoto(@Path("id") String id);
+    @GET("http://api.themoviedb.org/3/movie/{id}/credits?api_key=eff7e3120107959ee18d20eeaf5ea5fd")
+    Call<Casts> getCastDetail(@Path("id") String id);
 }

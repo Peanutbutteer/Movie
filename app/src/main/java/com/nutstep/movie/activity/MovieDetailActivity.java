@@ -26,6 +26,7 @@ public class MovieDetailActivity extends AppCompatActivity implements ChangeList
 
     ImageView imageBackdrop;
     ActionBar actionBar;
+    TextView textGenre;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,10 +43,10 @@ public class MovieDetailActivity extends AppCompatActivity implements ChangeList
 
     private void initInstance() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        textGenre = (TextView) findViewById(R.id.text_genre);
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
         imageBackdrop = (ImageView) findViewById(R.id.image_backdrop);
 
     }
@@ -65,7 +66,10 @@ public class MovieDetailActivity extends AppCompatActivity implements ChangeList
         getSupportActionBar().setTitle(title);
     }
 
-
+    @Override
+    public void setGenre(String genre) {
+        textGenre.setText(genre);
+    }
 
     @Override
     public void setSearchQuery(String query) {

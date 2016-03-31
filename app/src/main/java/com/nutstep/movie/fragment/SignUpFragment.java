@@ -10,8 +10,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 import com.nutstep.movie.R;
 import com.nutstep.movie.activity.MainActivity;
 import com.nutstep.movie.dao.User;
@@ -24,7 +22,6 @@ import java.util.Map;
 public class SignUpFragment extends Fragment {
     EditText editTextEmail,editTextPassword,editTextName;
     Button btnSignUp;
-    Firebase ref = new Firebase(Utils.getInstance().getBaseUrl());
     public SignUpFragment() {
         super();
     }
@@ -90,27 +87,6 @@ public class SignUpFragment extends Fragment {
                 final String textEmail = editTextEmail.getText().toString();
                 String textPassword = editTextPassword.getText().toString();
                 final String textName = editTextName.getText().toString();
-                ref.createUser(textEmail, textPassword, new Firebase.ValueResultHandler<Map<String, Object>>() {
-                    @Override
-                    public void onSuccess(Map<String, Object> stringObjectMap) {
-                        Toast.makeText(getContext(),"Sign Up Sucess",Toast.LENGTH_SHORT).show();
-                        Firebase refUser = ref.child("users").child(stringObjectMap.get("uid").toString());
-                        refUser.setValue(new User(textName,"BKK"));
-                        Intent intent = new Intent(getContext(),MainActivity.class);
-                        LocalStoreageManager.getInstance().getEditor().putString("uid",stringObjectMap.get("uid").toString()).putString("email",textEmail).apply();
-                        startActivity(intent);
-                        if(getActivity()!=null)
-                        {
-                            getActivity().finish();
-                        }
-                    }
-
-                    @Override
-                    public void onError(FirebaseError firebaseError) {
-                        Toast.makeText(getContext(),firebaseError.getMessage(),Toast.LENGTH_SHORT).show();
-
-                    }
-                });
             }
         }
     };
