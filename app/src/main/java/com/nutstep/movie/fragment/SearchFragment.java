@@ -1,4 +1,5 @@
 package com.nutstep.movie.fragment;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,8 +17,10 @@ import android.widget.Toast;
 import com.nutstep.movie.ChangeListenner;
 import com.nutstep.movie.R;
 import com.nutstep.movie.RecyclerItemClickListener;
+import com.nutstep.movie.SpaceItemDecoration;
 import com.nutstep.movie.adapter.SearchViewAdapter;
 import com.nutstep.movie.dao.MovieList;
+import com.nutstep.movie.dao.SearchMovie;
 import com.nutstep.movie.manager.HttpManager;
 import com.nutstep.movie.utils.Utils;
 
@@ -32,6 +35,7 @@ public class SearchFragment extends Fragment {
 
     RecyclerView recyclerViewSearch;
     SearchViewAdapter searchViewAdapter;
+
     public SearchFragment() {
         super();
     }
@@ -73,7 +77,8 @@ public class SearchFragment extends Fragment {
         recyclerViewSearch = (RecyclerView) rootView.findViewById(R.id.recylerview_search);
         searchViewAdapter = new SearchViewAdapter(getContext());
         recyclerViewSearch.setAdapter(searchViewAdapter);
-        recyclerViewSearch.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+        recyclerViewSearch.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerViewSearch.addItemDecoration(new SpaceItemDecoration(5));
     }
 
     @Override
@@ -87,20 +92,16 @@ public class SearchFragment extends Fragment {
         // Restore Instance (Fragment level's variables) State here
     }
 
-    public void searchToken(String query)
-    {
-        HttpManager.getInstance().searchMoive(query).enqueue(new Callback<MovieList>() {
+    public void searchToken(String query) {
+        HttpManager.getInstance().searchMoive(query).enqueue(new Callback<SearchMovie>() {
             @Override
-            public void onResponse(Call<MovieList> call, Response<MovieList> response) {
-                if(response.isSuccess())
-                {
-                    if(searchViewAdapter!=null) {
-                        searchViewAdapter.updateList(response.body().getData());
+            public void onResponse(Call<SearchMovie> call, Response<SearchMovie> response) {
+                if (response.isSuccess()) {
+                    if (searchViewAdapter != null) {
+                        searchViewAdapter.updateList(response.body().getResults());
                         searchViewAdapter.notifyDataSetChanged();
                     }
-                }
-                else
-                {
+                } else {
                     try {
                         showToast(response.errorBody().string().toString());
                     } catch (IOException e) {
@@ -110,18 +111,16 @@ public class SearchFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<MovieList> call, Throwable t) {
+            public void onFailure(Call<SearchMovie> call, Throwable t) {
                 showToast(t.getMessage());
             }
         });
+
     }
 
-
-    public void showToast(String toast)
-    {
-        if(getActivity()!=null) {
+    public void showToast(String toast) {
+        if (getActivity() != null) {
             Toast.makeText(getActivity(), toast, Toast.LENGTH_SHORT).show();
         }
     }
-
 }

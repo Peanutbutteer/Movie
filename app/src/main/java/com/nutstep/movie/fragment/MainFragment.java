@@ -20,9 +20,6 @@ import com.nutstep.movie.adapter.MainViewPagerAdapter;
 public class MainFragment extends Fragment {
 
     ViewPager viewPagerMain;
-
-    final int HOME = 0;
-    final int MOVIE = 1;
     ChangeListenner mChangeTitle;
     MainViewPagerAdapter pagerAdapter;
     TabLayout tabLayoutMenu;
@@ -86,7 +83,7 @@ public class MainFragment extends Fragment {
         viewPagerMain.setAdapter(pagerAdapter);
         tabLayoutMenu.setupWithViewPager(viewPagerMain);
 
-       // tabLayoutMenu.setOnTabSelectedListener(onTabSelectedListener);
+       tabLayoutMenu.setOnTabSelectedListener(onTabSelectedListener);
 
 
 

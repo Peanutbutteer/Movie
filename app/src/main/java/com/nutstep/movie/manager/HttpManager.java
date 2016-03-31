@@ -2,8 +2,12 @@ package com.nutstep.movie.manager;
 
 import android.content.Context;
 
+import com.nutstep.movie.dao.Intheater;
 import com.nutstep.movie.dao.Movie;
 import com.nutstep.movie.dao.MovieList;
+import com.nutstep.movie.dao.Photos;
+import com.nutstep.movie.dao.Result;
+import com.nutstep.movie.dao.SearchMovie;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -15,7 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class HttpManager {
     private static HttpManager instance;
     private Context context;
-    private Retrofit retrofit = new Retrofit.Builder().baseUrl("http://www.omdbapi.com").addConverterFactory(GsonConverterFactory.create()).build();
+    private Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.themoviedb.org/3/").addConverterFactory(GsonConverterFactory.create()).build();
     private MovieService service = retrofit.create(MovieService.class);
     public static HttpManager getInstance()
     {
@@ -28,14 +32,23 @@ public class HttpManager {
         context = Contextor.getInstance().getContext();
     }
 
-    public Call<MovieList>  searchMoive(String title)
+    public Call<SearchMovie>  searchMoive(String title)
     {
-       return service.movieSearchList(title);
+       return service.searchMovie(title);
     }
 
     public Call<Movie> getMovieDatail(String id)
     {
         return service.movieDatail(id);
+    }
+
+    public Call<Photos> getMoviePhotos(String id)
+    {
+        return service.moviePhoto(id);
+    }
+
+    public Call<Intheater> getMovieIntheater() {
+        return service.inTheater();
     }
 
 }

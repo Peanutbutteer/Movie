@@ -6,8 +6,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -15,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -22,12 +27,17 @@ import com.firebase.client.ValueEventListener;
 import com.nutstep.movie.ChangeListenner;
 import com.nutstep.movie.R;
 import com.nutstep.movie.activity.MovieDetailActivity;
+import com.nutstep.movie.adapter.CastPictureAdapter;
+import com.nutstep.movie.adapter.PhotoMovieAdapter;
 import com.nutstep.movie.dao.Movie;
+import com.nutstep.movie.dao.Photos;
+import com.nutstep.movie.dao.Result;
 import com.nutstep.movie.dao.User;
 import com.nutstep.movie.manager.HttpManager;
 import com.nutstep.movie.manager.LocalStoreageManager;
 import com.nutstep.movie.utils.Utils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,19 +50,25 @@ import retrofit2.Response;
 
 
 public class MovieDetailFragment extends Fragment {
-    String imdbId;
+    int imdbId;
     TextView textTitle, textScore, textRuntime, textPlot;
-    ImageView imagePoster;
     ImageView imageStatus;
     Firebase ref = new Firebase(Utils.getInstance().getBaseUrl());
     Movie movie;
-    int status=1;
-    String uid = LocalStoreageManager.getInstance().getSharedPreferences().getString("uid","");
+    RecyclerView recyclerViewMoivePicture, recyclerViewMoiveCast;
+    PhotoMovieAdapter photoMovieAdapter;
+    CastPictureAdapter castPictureAdapter;
+    String uid = LocalStoreageManager.getInstance().getSharedPreferences().getString("uid", "");
+
     public MovieDetailFragment() {
         super();
     }
 
     ChangeListenner mChangeTitle;
+    DetailFragment mDetailFragment;
+    public interface DetailFragment{
+        public void setImagePoster(String path);
+    }
 
     public static MovieDetailFragment newInstance() {
         MovieDetailFragment fragment = new MovieDetailFragment();
@@ -61,6 +77,11 @@ public class MovieDetailFragment extends Fragment {
         return fragment;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.options_menu, menu);
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -68,15 +89,18 @@ public class MovieDetailFragment extends Fragment {
 
         try {
             mChangeTitle = (ChangeListenner) context;
+            mDetailFragment = (DetailFragment) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement OnHeadlineSelectedListener");
         }
+
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         init(savedInstanceState);
 
         if (savedInstanceState != null)
@@ -101,49 +125,22 @@ public class MovieDetailFragment extends Fragment {
         // Init 'View' instance(s) with rootView.findViewById here
         // Note: State of variable initialized here could not be saved
         //       in onSavedInstanceState
-        imdbId = getArguments().getString("id", "");
+        imdbId = getArguments().getInt("id", 0);
         textTitle = (TextView) rootView.findViewById(R.id.text_title);
         textScore = (TextView) rootView.findViewById(R.id.text_score);
-        textRuntime = (TextView) rootView.findViewById(R.id.text_runtime);
         textPlot = (TextView) rootView.findViewById(R.id.text_plot);
-        imageStatus = (ImageView) rootView.findViewById(R.id.btn_add_to_watch);
-        ref.child("readywatchlist").child(uid).child(imdbId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue()!=null)
-                {
-                    Toast.makeText(getActivity(),"Added to Ready!",Toast.LENGTH_SHORT).show();
-                    imageStatus.setImageLevel(3);
-                    status = 3;
-                }
-                }
-
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-        ref.child("watchlist").child(uid).child(imdbId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue()!=null)
-                {
-                    Toast.makeText(getActivity(),"Added to WatchList!",Toast.LENGTH_SHORT).show();
-                    imageStatus.setImageLevel(2);
-                    status = 2;
-                }
-            }
-
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-        imageStatus.setClickable(true);
-        imageStatus.setOnClickListener(onClickListener);
-        loadMovieData(imdbId);
+        recyclerViewMoivePicture = (RecyclerView) rootView.findViewById(R.id.recylerview_movie_picture);
+        recyclerViewMoiveCast = (RecyclerView) rootView.findViewById(R.id.recylerview_movie_cast);
+        photoMovieAdapter = new PhotoMovieAdapter(getContext());
+        recyclerViewMoivePicture.setAdapter(photoMovieAdapter);
+        recyclerViewMoivePicture.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerViewMoivePicture.setNestedScrollingEnabled(false);
+        castPictureAdapter = new CastPictureAdapter(getContext());
+        recyclerViewMoiveCast.setAdapter(castPictureAdapter);
+        recyclerViewMoiveCast.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerViewMoiveCast.setNestedScrollingEnabled(false);
+        mChangeTitle.changeTitleBar("");
+        loadMovieData(String.valueOf(imdbId));
     }
 
     @Override
@@ -158,50 +155,65 @@ public class MovieDetailFragment extends Fragment {
     }
 
     private void loadMovieData(String id) {
-        final LoadingScreenFragment loadingScreenFragment = LoadingScreenFragment.newInstance();
-        getFragmentManager().beginTransaction().add(R.id.content_containner, loadingScreenFragment, "Loading").commit();
+        addLoadingScreen();
         HttpManager.getInstance().getMovieDatail(id).enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
-                movie = response.body();
-                textTitle.setText(movie.getTitle());
-                textScore.setText(movie.getImdbRating());
-                textRuntime.setText(movie.getRuntime());
-                textPlot.setText(movie.getPlot());
-                mChangeTitle.changeTitleBar(movie.getTitle());
-                getFragmentManager().beginTransaction().remove(loadingScreenFragment).commit();
+                if (response.isSuccess()) {
+                    movie = response.body();
+                    mChangeTitle.changeTitleBar(movie.getTitle());
+                    mDetailFragment.setImagePoster(movie.getBackdropPath());
+                    textScore.setText(String.valueOf(movie.getVoteAverage()));
+                    textPlot.setText(movie.getOverview());
+                    removeLoadingScreen();
+                }
+                else
+                {
+                    try {
+                        Toast.makeText(getContext(),response.errorBody().string(),Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
 
             @Override
             public void onFailure(Call<Movie> call, Throwable t) {
+                Toast.makeText(getContext(),t.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        HttpManager.getInstance().getMoviePhotos(id).enqueue(new Callback<Photos>() {
+            @Override
+            public void onResponse(Call<Photos> call, Response<Photos> response) {
+                if(response.isSuccess()&&response.body().getBackdrops()!=null) {
+                    photoMovieAdapter.setBackdropList(response.body().getBackdrops());
+                    photoMovieAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Photos> call, Throwable t) {
 
             }
         });
     }
 
+    LoadingScreenFragment loadingScreenFragment = LoadingScreenFragment.newInstance();
+
+    public void removeLoadingScreen() {
+        getActivity().getSupportFragmentManager().beginTransaction().remove(loadingScreenFragment).commit();
+    }
+
+    public void addLoadingScreen() {
+        getFragmentManager().beginTransaction().add(R.id.content_containner, loadingScreenFragment, "Loading").commit();
+    }
+
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (v == imageStatus) {
-                Map<String,Object> movie = new HashMap<String, Object>();
-                movie.put(imdbId,true);
-                if(status==1)
-                {
-                    ref.child("watchlist").child(uid).updateChildren(movie);
-                }
-                else if(status==2)
-                {
-                    ref.child("watchlist").child(uid).child(imdbId).setValue(null);
-                    ref.child("readywatchlist").child(uid).updateChildren(movie);
-                }
-                else
-                {
-                    ref.child("readywatchlist").child(uid).child(imdbId).setValue(null);
-                    status=1;
-                    imageStatus.setImageLevel(1);
-                }
 
-            }
         }
     };
 

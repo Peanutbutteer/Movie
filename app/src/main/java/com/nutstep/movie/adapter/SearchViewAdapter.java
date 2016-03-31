@@ -11,6 +11,7 @@ import com.nutstep.movie.ChangeListenner;
 import com.nutstep.movie.R;
 import com.nutstep.movie.activity.MovieDetailActivity;
 import com.nutstep.movie.dao.Movie;
+import com.nutstep.movie.dao.Result;
 import com.nutstep.movie.viewholder.SearchViewHolder;
 
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.List;
  */
 public class SearchViewAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 
-    private List<Movie> list;
+    private List<Result> list;
     private ChangeListenner changeListenner;
     private Context context;
     public SearchViewAdapter(Context context) {
@@ -34,7 +35,7 @@ public class SearchViewAdapter extends RecyclerView.Adapter<SearchViewHolder> {
         }
     }
 
-    public void updateList(List<Movie> list)
+    public void updateList(List<Result> list)
     {
         this.list = list;
     }
@@ -47,19 +48,16 @@ public class SearchViewAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 
     @Override
     public void onBindViewHolder(SearchViewHolder holder, final int position) {
-        final Movie movie = list.get(position);
+        final Result movie = list.get(position);
         holder.changeTitleText(movie.getTitle());
-        holder.setBtnToQueryListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeListenner.setSearchQuery(movie.getTitle());
-            }
-        });
+        holder.changeGenreText("");
+        holder.changeYearText("("+movie.getReleaseDate()+")");
+        holder.setImagePoster(context,movie.getPosterPath());
         holder.setBtnShowDetailLintener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, MovieDetailActivity.class);
-                intent.putExtra("id",list.get(position).getImdbId());
+                intent.putExtra("id",movie.getId());
                 context.startActivity(intent);
             }
         });

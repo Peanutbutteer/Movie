@@ -1,51 +1,46 @@
 package com.nutstep.movie.activity;
 
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.PersistableBundle;
+import android.content.res.Configuration;
 import android.speech.RecognizerIntent;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.CursorAdapter;
+import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.nutstep.movie.ChangeListenner;
 import com.nutstep.movie.R;
-import com.nutstep.movie.adapter.MainViewPagerAdapter;
 import com.nutstep.movie.fragment.MainFragment;
 import com.nutstep.movie.fragment.SearchFragment;
-import com.nutstep.movie.fragment.TimelineFragment;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements ChangeListenner {
     MaterialSearchView searchView;
-    RelativeLayout contentContainner;
     SearchFragment searchFragment;
-
+    FrameLayout frameLayout;
+   // LinearLayout bottomBar;
+    DrawerLayout mDrawerLayout;
+    NavigationView navigationView;
+    ActionBarDrawerToggle actionBarDrawerToggle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         initInstance();
 
@@ -59,8 +54,50 @@ public class MainActivity extends AppCompatActivity implements ChangeListenner {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         searchFragment = SearchFragment.newInstance();
+        frameLayout = (FrameLayout) findViewById(R.id.toolbar_container);
+        //bottomBar = (LinearLayout) findViewById(R.id.bottom_bar);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.open_drawer,R.string.close_drawer);
+        mDrawerLayout.addDrawerListener(actionBarDrawerToggle);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                if(item.getItemId()==R.id.nav_movie)
+                {
+                    return true;
+                }
+                if(item.getItemId()==R.id.nav_random)
+                {
+                    Intent intent = new Intent(MainActivity.this,RandomActivity.class);
+                    startActivity(intent);
+
+                    return false;
+                }
+                mDrawerLayout.closeDrawer(navigationView);
+                return false;
+            }
+        });
+        navigationView.setCheckedItem(R.id.nav_movie);
     }
 
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        actionBarDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        actionBarDrawerToggle.onConfigurationChanged(newConfig);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -76,12 +113,17 @@ public class MainActivity extends AppCompatActivity implements ChangeListenner {
             @Override
             public void onSearchViewShown() {
                 getSupportFragmentManager().beginTransaction().add(R.id.content_containner, searchFragment, "SearchFragment").addToBackStack(null).commit();
+                ((AppBarLayout.LayoutParams)frameLayout.getLayoutParams()).setScrollFlags(0);
+               // bottomBar.setVisibility(View.GONE);
+
             }
 
             @Override
             public void onSearchViewClosed() {
                 if(getSupportFragmentManager().findFragmentByTag("SearchFragment")!=null) {
                     getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag("SearchFragment")).commit();
+                    ((AppBarLayout.LayoutParams)frameLayout.getLayoutParams()).setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS| AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
+                  //  bottomBar.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -89,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements ChangeListenner {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 searchFragment.searchToken(query);
+                hideKeyboard();
                 return true;
             }
 
@@ -100,6 +143,23 @@ public class MainActivity extends AppCompatActivity implements ChangeListenner {
         });
 
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (actionBarDrawerToggle.onOptionsItemSelected(item))
+        {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void hideKeyboard(){
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     @Override

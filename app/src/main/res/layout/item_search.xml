@@ -1,42 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="48sp"
-    android:orientation="horizontal">
-
-    <LinearLayout
-        android:id="@+id/btn_show_detail"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="?attr/selectableItemBackground"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:scaleType="centerInside"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_suggestion" />
-
-        <TextView
-            android:id="@+id/text_title"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="Search"
-            android:textSize="16sp" />
-    </LinearLayout>
+    android:id="@+id/item_containner"
+    android:layout_height="200dp"
+    android:background="#FFFFFF">
     <ImageView
-        android:id="@+id/btn_toquery"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="?attr/selectableItemBackground"
-        android:layout_width="50dp"
-        android:layout_height="match_parent"
-        android:scaleType="centerInside"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_action_navigation_close" />
-</LinearLayout>
+        android:id="@+id/image_poster"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <RelativeLayout
+        android:background="#40ffffff"
+        android:layout_width="match_parent"
+        android:padding="16dp"
+        android:layout_height="match_parent">
+    <TextView
+        android:text="Action, sci-fi, mystery, thriller"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_genre" />
+    <TextView
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_above="@id/text_genre"
+        android:text="Inception"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_title"/>
+    <TextView
+        android:text="(2010)"
+        android:padding="5dp"
+        android:layout_toRightOf="@id/text_title"
+        android:layout_above="@id/text_genre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_year"/>
+    </RelativeLayout>
+</RelativeLayout>
