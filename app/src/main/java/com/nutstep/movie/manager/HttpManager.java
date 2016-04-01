@@ -60,4 +60,8 @@ public class HttpManager {
         return service.getCastDetail(id);
     }
 
+    public Call<Intheater> getRandomMovie(String YearGte,String YearLte,int page,String genre){
+        return service.getRandomMovie(YearGte,YearLte,page,genre);
+    }
+
 }

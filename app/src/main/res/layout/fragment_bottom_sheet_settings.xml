@@ -5,23 +5,26 @@
     android:clipToPadding="true"
     app:layout_behavior="@string/bottom_sheet_behavior"
     android:background="@android:color/white"
+    app:behavior_peekHeight="1dp"
     android:id="@+id/bottom_sheet"
     android:layout_height="wrap_content">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
     <RelativeLayout
         android:layout_margin="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
+            android:id="@+id/text_btn_apply"
             android:textSize="20sp"
             android:layout_alignParentRight="true"
             android:text="Apply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
+            android:id="@+id/text_btn_cancel"
             android:textSize="20sp"
             android:text="Cancel"
             android:layout_width="wrap_content"
@@ -43,9 +46,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
+                android:text="1990"
+                android:id="@+id/text_year_be"
                 android:layout_margin="10dp"
                 android:gravity="center"
-                android:text="1980"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent" />
         <com.appyvet.rangebar.RangeBar
@@ -54,8 +58,8 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="80dp"
-            custom:tickStart="1990"
-            custom:barWeight="10dp"
+            custom:tickStart="1980"
+            custom:barWeight="2dp"
             custom:selectorSize="8dp"
             custom:pinColor="#7CA1BB"
             custom:tickColor="@android:color/transparent"
@@ -65,6 +69,7 @@
             custom:tickInterval="1"
             custom:tickEnd="2016"/>
             <TextView
+                android:id="@+id/text_year_af"
                 android:layout_margin="10dp"
                 android:gravity="center"
                 android:text="2016"
@@ -90,6 +95,7 @@
             app:tagTextColor="@android:color/white"
             android:layout_marginBottom="20dp"
             app:tagForeground="#85F5F5F5"
+            app:temporaryPins="false"
             app:selectionMode="true">
         </com.greenfrvr.hashtagview.HashtagView>
     </LinearLayout>

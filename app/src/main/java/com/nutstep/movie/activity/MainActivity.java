@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements ChangeListenner {
     MaterialSearchView searchView;
     SearchFragment searchFragment;
     FrameLayout frameLayout;
-   // LinearLayout bottomBar;
+   // LinearLayout bottomBar
     DrawerLayout mDrawerLayout;
     NavigationView navigationView;
     ActionBarDrawerToggle actionBarDrawerToggle;
@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements ChangeListenner {
         setSupportActionBar(toolbar);
         searchFragment = SearchFragment.newInstance();
         frameLayout = (FrameLayout) findViewById(R.id.toolbar_container);
-        //bottomBar = (LinearLayout) findViewById(R.id.bottom_bar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 
         actionBarDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.open_drawer,R.string.close_drawer);

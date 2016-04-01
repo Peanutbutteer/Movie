@@ -29,6 +29,8 @@ public interface MovieService {
     Call<SearchMovie> searchMovie(@Query("query") String query);
     @GET("movie/{id}/images?api_key=eff7e3120107959ee18d20eeaf5ea5fd")
     Call<Photos> moviePhoto(@Path("id") String id);
-    @GET("http://api.themoviedb.org/3/movie/{id}/credits?api_key=eff7e3120107959ee18d20eeaf5ea5fd")
+    @GET("movie/{id}/credits?api_key=eff7e3120107959ee18d20eeaf5ea5fd")
     Call<Casts> getCastDetail(@Path("id") String id);
+    @GET("discover/movie?api_key=eff7e3120107959ee18d20eeaf5ea5fd&sort_by=popularity.desc")
+    Call<Intheater> getRandomMovie(@Query("primary_release_date.gte") String yearGte,@Query("primary_release_date.lte") String yearLte,@Query("page") int page,@Query("with_genres") String genre);
 }

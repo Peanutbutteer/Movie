@@ -15,10 +15,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"></FrameLayout>
 
-        <ImageView
+        <FrameLayout
+            android:padding="20dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1">
+            <ImageView
+                android:layout_gravity="center"
+                android:id="@+id/image_poster"
+                android:layout_width="244dp"
+                android:layout_height="364dp" />
+            </FrameLayout>
 
 
         <LinearLayout
@@ -27,17 +34,21 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
+                android:id="@+id/text_title"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:gravity="right"
-                android:text="Inception"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:ellipsize="marquee"
+                android:maxWidth="280dp"
                 android:textSize="20sp"
                 android:textStyle="bold" />
             <TextView
+                android:id="@+id/text_year"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="(2010)" />
+                android:text="" />
         </LinearLayout>
 
         <RelativeLayout
