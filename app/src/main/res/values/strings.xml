@@ -2,5 +2,7 @@
     <string name="app_name">Movie</string>
     <string name="email">Email</string>
     <string name="open_drawer">เปิดเมนู</string>
-    ​<string name="close_drawer">ปิดเมนู</string>
+    ​
+    <string name="close_drawer">ปิดเมนู</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve">AIzaSyBvLkAHOEEKGCdlJB6UhGt13LxZsxR4EzQ</string>
 </resources>

@@ -45,11 +45,17 @@
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView
+        android:background="@color/colorPrimaryDark"
+        app:itemTextColor="@color/white"
         android:id="@+id/nav_view"
+        app:itemIconTint="@color/white"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/drawer_view"
         android:layout_gravity="start"
+        app:itemBackground="@drawable/drawer_list_selector"
         android:fitsSystemWindows="true"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"></android.support.design.widget.NavigationView>
+        android:layout_height="match_parent">
+
+    </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>

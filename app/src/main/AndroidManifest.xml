@@ -3,6 +3,8 @@
     package="com.nutstep.movie">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".MainApplication"
@@ -20,11 +22,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        <activity android:name=".activity.LoginActivity"></activity>
+        <activity android:name=".activity.LoginActivity" />
         <activity
             android:name=".activity.MovieDetailActivity"
             android:parentActivityName=".activity.MainActivity" />
@@ -35,8 +38,15 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
-
         </activity>
+        <activity android:name=".activity.MapActivity"></activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBvLkAHOEEKGCdlJB6UhGt13LxZsxR4EzQ" />
+
+        <activity android:name=".activity.GeniusSearchActivity" />
+        <activity android:name=".activity.TheaterFindActivity"></activity>
     </application>
 
 </manifest>

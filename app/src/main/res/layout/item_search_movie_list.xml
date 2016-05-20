@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_margin="1dp"
+    android:id="@+id/card_movie"
+    android:weightSum="20"
+    android:layout_height="280dp">
+
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_weight="18"
+            android:id="@+id/image_poster"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
+
+        <TextView
+            android:background="#1A2127"
+            android:text="Iron Man 3"
+            android:gravity="center_vertical"
+            android:textSize="16dp"
+            android:layout_toRightOf="@+id/image_poster"
+            android:id="@+id/text_title"
+            android:layout_width="match_parent"
+            android:textColor="@android:color/white"
+            android:layout_weight="2"
+            android:layout_height="0dp" />
+</LinearLayout>

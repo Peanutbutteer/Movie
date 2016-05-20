@@ -106,6 +106,8 @@ public class RandomMovieFragment extends Fragment {
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("max",maxPage+"");
+                if(maxPage>1000) maxPage=1000;
                 page = new Random().nextInt(maxPage);
                 if(page<=0) page =1;
                 renewRandom();
@@ -250,7 +252,7 @@ public class RandomMovieFragment extends Fragment {
                     {
                         MovieIntheaterResult result = response.body().getResults().get(random.nextInt(response.body().getResults().size()));
                         textTitle.setText(result.getTitle());
-                        textYear.setText(result.getReleaseDate());
+                        textYear.setText(result.getReleaseDate().split("-")[0]);
                         Glide.with(getContext()).load("http://image.tmdb.org/t/p/w500/"+result.getPosterPath()).into(imagePoster);
                         maxPage = response.body().getTotalPages();
                     }

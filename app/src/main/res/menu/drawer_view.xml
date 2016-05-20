@@ -3,12 +3,16 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_movie"
-            android:icon="@drawable/ic_done_black_24dp"
+            android:icon="@drawable/ic_movie_white_24dp"
             android:title="Movie"/>
         <item
             android:id="@+id/nav_random"
-            android:icon="@drawable/ic_done_black_24dp"
+            android:icon="@drawable/ic_autorenew_white_24dp"
             android:title="Random" />
+        <item
+            android:id="@+id/nav_search_movie"
+            android:icon="@drawable/ic_pages_white_24dp"
+            android:title="Genius Search" />
     </group>
 
     <!--<item android:title="Showtimes">-->

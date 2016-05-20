@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements ChangeListenner {
     MaterialSearchView searchView;
     SearchFragment searchFragment;
     FrameLayout frameLayout;
-   // LinearLayout bottomBar
+   // LinearLayout bottomBar;
     DrawerLayout mDrawerLayout;
     NavigationView navigationView;
     ActionBarDrawerToggle actionBarDrawerToggle;
@@ -75,6 +75,13 @@ public class MainActivity extends AppCompatActivity implements ChangeListenner {
                 if(item.getItemId()==R.id.nav_random)
                 {
                     Intent intent = new Intent(MainActivity.this,RandomActivity.class);
+                    startActivity(intent);
+
+                    return true;
+                }
+                if(item.getItemId()==R.id.nav_search_movie)
+                {
+                    Intent intent = new Intent(MainActivity.this,GeniusSearchActivity.class);
                     startActivity(intent);
 
                     return false;
