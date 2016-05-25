@@ -78,7 +78,9 @@ public class TheaterFindActivity extends AppCompatActivity implements GoogleApiC
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                ReloadTheaterList();
+                if(mLastLocation!=null) {
+                    ReloadTheaterList();
+                }
             }
         });
 
