@@ -1,5 +1,8 @@
 package com.nutstep.movie.adapter;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,11 +29,15 @@ import static android.R.id.list;
 public class TheaterSearchListAdapter extends RecyclerView.Adapter<TheaterSearchViewHolder> {
     private List<Theater> theaterList;
     Calendar now = Calendar.getInstance();
-
+    Context context;
     @Override
     public TheaterSearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View layoutInflater = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_theater_list,parent,false);
         return new TheaterSearchViewHolder(layoutInflater);
+    }
+
+    public TheaterSearchListAdapter(Context context) {
+        this.context = context;
     }
 
     public void addTheater(List<Theater> list){
@@ -40,7 +47,7 @@ public class TheaterSearchListAdapter extends RecyclerView.Adapter<TheaterSearch
 
     @Override
     public void onBindViewHolder(TheaterSearchViewHolder holder, int position) {
-        Theater theater = theaterList.get(position);
+        final Theater theater = theaterList.get(position);
         holder.setTextTheaterName(theater.getThai());
         if(theater.getDistance()!=null) holder.setTextDistance(theater.getDistance());
         if(theater.getShowTime()!=null) {
@@ -77,6 +84,14 @@ public class TheaterSearchListAdapter extends RecyclerView.Adapter<TheaterSearch
                 break;
             }
             holder.setTextShowtime(show);
+            holder.setItemClick(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                            Uri.parse("http://maps.google.com/maps?daddr="+theater.getLocation().getLat()+","+theater.getLocation().getLong()));
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 

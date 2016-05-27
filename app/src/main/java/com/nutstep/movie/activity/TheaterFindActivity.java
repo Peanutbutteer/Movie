@@ -22,23 +22,13 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.nutstep.movie.R;
 import com.nutstep.movie.adapter.TheaterSearchListAdapter;
-import com.nutstep.movie.dao.Distance;
-import com.nutstep.movie.dao.DistanceMatrix;
 import com.nutstep.movie.dao.Theater;
 import com.nutstep.movie.dao.v2.Movie;
 import com.nutstep.movie.dao.v2.MovieShowTime;
 import com.nutstep.movie.dao.v2.V2MovieShowTime;
 import com.nutstep.movie.manager.HttpManager;
-import com.nutstep.movie.utils.Utils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -47,7 +37,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -72,7 +61,7 @@ public class TheaterFindActivity extends AppCompatActivity implements GoogleApiC
         ButterKnife.bind(this);
         recyclerviewTheater = (RecyclerView) findViewById(R.id.recylerview_theater);
         recyclerviewTheater.setLayoutManager(new LinearLayoutManager(this));
-        theaterAdapter = new TheaterSearchListAdapter();
+        theaterAdapter = new TheaterSearchListAdapter(this);
         recyclerviewTheater.setAdapter(theaterAdapter);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

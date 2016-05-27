@@ -1,5 +1,6 @@
 package com.nutstep.movie.viewholder;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -15,11 +16,13 @@ import java.util.List;
 
 public class TheaterSearchViewHolder extends RecyclerView.ViewHolder {
     private TextView textTheaterName,textDistance,textShowtime;
+    private CardView cardView;
     public TheaterSearchViewHolder(View itemView) {
         super(itemView);
         textTheaterName = (TextView) itemView.findViewById(R.id.text_theater_name);
         textDistance = (TextView) itemView.findViewById(R.id.text_distance);
         textShowtime = (TextView) itemView.findViewById(R.id.text_showtime);
+        cardView = (CardView) itemView.findViewById(R.id.card);
     }
 
     public void setTextTheaterName(String name){
@@ -34,5 +37,8 @@ public class TheaterSearchViewHolder extends RecyclerView.ViewHolder {
         textShowtime.setText(showtime);
     }
 
+    public void setItemClick(View.OnClickListener listener){
+        cardView.setOnClickListener(listener);
+    }
 
 }
